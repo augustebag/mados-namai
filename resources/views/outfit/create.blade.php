@@ -7,7 +7,7 @@
        @foreach ($master as $master)
            <option value="{{$master->id}}">{{$master->name}} {{$master->surname}}</option>
        @endforeach
-    </select>
+    </select> // pasirenkame kas sius outfita
    @csrf
    <button type="submit">ADD</button>
 </form>

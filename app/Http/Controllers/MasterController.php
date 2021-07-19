@@ -92,6 +92,6 @@ class MasterController extends Controller
     public function destroy(Master $master)
     {
         $master->delete();
-       return redirect()->route('master.index');
+        return redirect()->route('master.index');
     }
 }

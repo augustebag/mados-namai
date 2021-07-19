@@ -38,7 +38,7 @@ class OutfitController extends Controller
      */
     public function store(Request $request)
     {
-        $outfit = new Outfit;
+       $outfit = new Outfit;
        $outfit->type = $request->outfit_type;
        $outfit->color = $request->outfit_color;
        $outfit->size = $request->outfit_page;
