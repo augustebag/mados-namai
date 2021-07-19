@@ -31,3 +31,4 @@
 @endsection
 
 @section('title') New Master @endsection
+
