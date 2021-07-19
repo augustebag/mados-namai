@@ -15,8 +15,8 @@ class OutfitController extends Controller
      */
     public function index()
     {
-        $outfit = Outfit::all();
-       return view('outfit.index', ['outfit' => $outfit]);
+        $outfits = Outfit::all();
+        return view('outfit.index', ['outfits' => $outfits]);
     }
 
     /**
@@ -26,8 +26,8 @@ class OutfitController extends Controller
      */
     public function create()
     {
-        $master = Master::all();
-        return view('outfit.create', ['master' => $master]);
+        $masters = Master::all();
+        return view('outfit.create', ['masters' => $masters]);
     }
 
     /**
@@ -38,14 +38,14 @@ class OutfitController extends Controller
      */
     public function store(Request $request)
     {
-       $outfit = new Outfit;
-       $outfit->type = $request->outfit_type;
-       $outfit->color = $request->outfit_color;
-       $outfit->size = $request->outfit_page;
-       $outfit->about = $request->outfit_about;
-       $outfit->master_id = $request->master_id;
-       $outfit->save();
-       return redirect()->route('outfit.index');
+        $outfit = new Outfit;
+        $outfit->type = $request->outfit_type;
+        $outfit->color = $request->outfit_color;
+        $outfit->size = $request->outfit_size;
+        $outfit->about = $request->outfit_about;
+        $outfit->master_id = $request->master_id;
+        $outfit->save();
+        return redirect()->route('outfit.index')->with('success_message', 'New outfit has arrived.');
     }
 
     /**
@@ -67,7 +67,8 @@ class OutfitController extends Controller
      */
     public function edit(Outfit $outfit)
     {
-        //
+        $masters = Master::all();
+        return view('outfit.edit', ['masters' => $masters,  'outfit' => $outfit]);
     }
 
     /**
@@ -79,7 +80,13 @@ class OutfitController extends Controller
      */
     public function update(Request $request, Outfit $outfit)
     {
-        //
+        $outfit->type = $request->outfit_type;
+        $outfit->color = $request->outfit_color;
+        $outfit->size = $request->outfit_size;
+        $outfit->about = $request->outfit_about;
+        $outfit->master_id = $request->master_id;
+        $outfit->save();
+        return redirect()->route('outfit.index')->with('success_message', 'Outfit was edited.');
     }
 
     /**
@@ -90,6 +97,7 @@ class OutfitController extends Controller
      */
     public function destroy(Outfit $outfit)
     {
-        //
+        $outfit->delete();
+        return redirect()->route('outfit.index')->with('success_message', 'Outfit was deleted.');
     }
 }

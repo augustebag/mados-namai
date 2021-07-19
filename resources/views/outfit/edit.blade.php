@@ -1,15 +1,31 @@
-<form method="POST" action="{{route('outfit.update',[$outfit])}}">
-   Type: <input type="text" name="outfit_type" value="{{$outfit->type}}">
-   Color: <input type="text" name="outfit_color"  value="{{$outfit->color}}">
-   Size: <input type="text" name="outfit_size"  value="{{$outfit->size}}">
-   About: <textarea name="outfit_about"></textarea>
-   <select name="master_id">
-       @foreach ($master as $master)
-           <option value="{{$master->id}}" @if($master->id == $outfit->master_id) selected @endif>
-           {{$master->name}} {{$master->surname}}
-               </option>
-       @endforeach
-    </select>
-   @csrf
-   <button type="submit">ADD</button>
-</form>
+@extends('layouts.app')
+
+@section('content')
+<div class="container">
+   <div class="row justify-content-center">
+       <div class="col-md-8">
+           <div class="card">
+               <div class="card-header">Edit Master</div>
+
+               <div class="card-body">
+                 <form method="POST" action="{{route('master.update',$master)}}">
+                    <div class="form-group">
+                        <label>Name: </label>
+                        <input type="text" class="form-control" name="master_name" value="{{$master->name}}">
+                        <small class="form-text text-muted">Masters name.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Surname: </label>
+                        <input type="text" class="form-control" name="master_surname" value="{{$master->surname}}">
+                        <small class="form-text text-muted">Masters surname.</small>
+                    </div>
+                     @csrf
+                     <button type="submit" class="btn btn-primary">Edit</button>
+                  </form>
+               </div>
+           </div>
+       </div>
+   </div>
+</div>
+@endsection

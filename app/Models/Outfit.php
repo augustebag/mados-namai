@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,9 +8,9 @@ class Outfit extends Model
 {
     use HasFactory;
 
-    public function mesterOfOutfit()
+    public function masterOfOutfit()
     {
-        return $this->belongsTo('App\Models\Mester', 'master_id', 'id');
+        return $this->belongsTo('App\Models\Master', 'master_id', 'id');
     }
  
 }

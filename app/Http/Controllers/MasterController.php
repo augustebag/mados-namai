@@ -7,6 +7,12 @@ use Illuminate\Http\Request;
 
 class MasterController extends Controller
 {
+    
+    // public function __construct()
+    // {
+    //     $this->middleware('auth');
+    // }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,9 +20,10 @@ class MasterController extends Controller
      */
     public function index()
     {
-        $master = Master::all(); //is DB paima visus masterius
-        //$masters->yra objektas kolekcijos tipo
-       return view('master.index', ['master' => $master]);
+        $masters = Master::all(); // is DB gauna visus masterius
+        //$masters -> yra objektas kolekcijos tipo
+        //https://laravel.com/docs/8.x/collections#available-methods
+        return view('master.index', ['masters' => $masters]);
     }
 
     /**
@@ -39,10 +46,10 @@ class MasterController extends Controller
     {
         $master = new Master;
         $master->name = $request->master_name;
-        //DB->stulpelio_vardas = Formos name_atributas;
+      //DB->stulpelio_vardas = Formos->name_atributas;
         $master->surname = $request->master_surname;
         $master->save();
-        return redirect()->route('master.index');
+        return redirect()->route('master.index')->with('success_message', 'New master has arrived.');
     }
 
     /**
@@ -77,10 +84,10 @@ class MasterController extends Controller
     public function update(Request $request, Master $master)
     {
         $master->name = $request->master_name;
-        //DB->stulpelio_vardas = Formos name_atributas;
+        //DB->stulpelio_vardas = Formos->name_atributas;
         $master->surname = $request->master_surname;
         $master->save();
-        return redirect()->route('master.index');
+        return redirect()->route('master.index')->with('success_message', 'Der master was edited.');
     }
 
     /**
@@ -91,7 +98,10 @@ class MasterController extends Controller
      */
     public function destroy(Master $master)
     {
+        if ($master->masterHasOutfits->count()){
+            return redirect()->back()->with('info_message', 'There is job to do. Can\'t delete.');
+        }
         $master->delete();
-        return redirect()->route('master.index');
+        return redirect()->route('master.index')->with('success_message', 'Master gone.');
     }
 }
