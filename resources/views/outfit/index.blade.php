@@ -5,7 +5,34 @@
    <div class="row justify-content-center">
        <div class="col-md-8">
            <div class="card">
-               <div class="card-header">Outfits</div>
+               <div class="card-header">
+               <h2>Outfits</h2>
+               <form action="{{route('outfit.index')}}" method="get" class="sort-form">
+                <fieldset>
+                <legend>Sort by:</legend>
+                <div>
+                <label>Type</label><input type="radio" name="sort_by" value="type" checked>
+                </div>
+                <div>
+                <label>Size</label><input type="radio" name="sort_by" value="size">
+                </div>
+                </fieldset>
+                <fieldset>
+                <legend>Direction:</legend>
+                <div>
+                <label>Asc</label><input type="radio" name="dir" value="asc" checked>
+                </div>
+                <div>
+                <label>Desc</label><input type="radio" name="dir" value="desc">
+                </div>
+                </fieldset>
+                <button type="submit" class="btn btn-primary">Sort</button>
+                <a href="{{route('outfit.index')}}" class="btn btn-primary">Clear</a>
+               </form>
+               
+               
+               
+               </div>
 
                <div class="card-body">
                <ul class="list-group">
