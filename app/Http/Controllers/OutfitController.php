@@ -14,10 +14,68 @@ class OutfitController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $outfits = Outfit::all();
-        return view('outfit.index', ['outfits' => $outfits]);
+        
+        // $outfits = Outfit::orderBy('size', 'desc')->get();
+        $dir = 'asc';
+        $sort = 'type';
+        $defaultMaster = 0;
+        $masters = Master::all();
+        $s = '';
+        // Rūšiavimas
+        if ($request->sort_by && $request->dir) {
+            if ('type' == $request->sort_by && 'asc' == $request->dir) {
+                $outfits = Outfit::orderBy('type')->get();
+            }
+            elseif ('type' == $request->sort_by && 'desc' == $request->dir) {
+                $outfits = Outfit::orderBy('type', 'desc')->get();
+                $dir = 'desc';
+            }
+            elseif ('size' == $request->sort_by && 'asc' == $request->dir) {
+                $outfits = Outfit::orderBy('size')->get();
+                $sort = 'size';
+            }
+            elseif ('size' == $request->sort_by && 'desc' == $request->dir) {
+                $outfits = Outfit::orderBy('size', 'desc')->get();
+                $dir = 'desc';
+                $sort = 'size';
+            }
+            else {
+                $outfits = Outfit::all();
+            }
+        }
+
+        // Filtravimas
+        elseif ($request->master_id) {
+            $outfits = Outfit::where('master_id', (int)$request->master_id)->get();
+            $defaultMaster = (int)$request->master_id;
+        }
+
+        // Paieška
+        
+        elseif ($request->s) {
+            $outfits = Outfit::where('type', 'like', '%'.$request->s.'%')->get();
+            $s = $request->s;
+        }
+        elseif ($request->do_search) {
+            $outfits = Outfit::where('type', 'like', '')->get();
+
+        }
+        else {
+            $outfits = Outfit::all();
+        }
+
+        
+
+        return view('outfit.index', [
+            'outfits' => $outfits,
+            'dir' => $dir,
+            'sort' => $sort,
+            'masters' => $masters,
+            'defaultMaster' => $defaultMaster,
+            's' => $s
+        ]);
     }
 
     /**
