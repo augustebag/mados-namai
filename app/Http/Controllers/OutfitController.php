@@ -26,44 +26,44 @@ class OutfitController extends Controller
         // Rūšiavimas
         if ($request->sort_by && $request->dir) {
             if ('type' == $request->sort_by && 'asc' == $request->dir) {
-                $outfits = Outfit::orderBy('type')->get();
+                $outfits = Outfit::orderBy('type')->paginate(15)->withQueryString();
             }
             elseif ('type' == $request->sort_by && 'desc' == $request->dir) {
-                $outfits = Outfit::orderBy('type', 'desc')->get();
+                $outfits = Outfit::orderBy('type', 'desc')->paginate(15)->withQueryString();
                 $dir = 'desc';
             }
             elseif ('size' == $request->sort_by && 'asc' == $request->dir) {
-                $outfits = Outfit::orderBy('size')->get();
+                $outfits = Outfit::orderBy('size')->paginate(15)->withQueryString();
                 $sort = 'size';
             }
             elseif ('size' == $request->sort_by && 'desc' == $request->dir) {
-                $outfits = Outfit::orderBy('size', 'desc')->get();
+                $outfits = Outfit::orderBy('size', 'desc')->paginate(15)->withQueryString();
                 $dir = 'desc';
                 $sort = 'size';
             }
             else {
-                $outfits = Outfit::all();
+                $outfits = Outfit::paginate(15)->withQueryString();
             }
         }
 
         // Filtravimas
         elseif ($request->master_id) {
-            $outfits = Outfit::where('master_id', (int)$request->master_id)->get();
+            $outfits = Outfit::where('master_id', (int)$request->master_id)->paginate(15)->withQueryString();
             $defaultMaster = (int)$request->master_id;
         }
 
         // Paieška
         
         elseif ($request->s) {
-            $outfits = Outfit::where('type', 'like', '%'.$request->s.'%')->get();
+            $outfits = Outfit::where('type', 'like', '%'.$request->s.'%')->paginate(15)->withQueryString();
             $s = $request->s;
         }
         elseif ($request->do_search) {
-            $outfits = Outfit::where('type', 'like', '')->get();
+            $outfits = Outfit::where('type', 'like', '')->paginate(15)->withQueryString();
 
         }
         else {
-            $outfits = Outfit::all();
+            $outfits = Outfit::paginate(15)->withQueryString();
         }
 
         
