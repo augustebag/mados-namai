@@ -6,9 +6,11 @@ use App\Models\Outfit;
 use App\Models\Master;
 use Illuminate\Http\Request;
 use Validator;
+use PDF;
 
 class OutfitController extends Controller
 {
+    
     public function __construct()
     {
         $this->middleware('auth');
@@ -136,7 +138,7 @@ class OutfitController extends Controller
      */
     public function show(Outfit $outfit)
     {
-        //
+        return view('outfit.show', ['outfit' => $outfit]);
     }
 
     /**
@@ -179,5 +181,12 @@ class OutfitController extends Controller
     {
         $outfit->delete();
         return redirect()->route('outfit.index')->with('success_message', 'Outfit was deleted.');
+    }
+
+
+    public function pdf(Outfit $outfit)
+    {
+        $pdf = PDF::loadView('outfit.pdf', ['outfit' => $outfit]);
+        return $pdf->download($outfit->type.'.pdf');
     }
 }
