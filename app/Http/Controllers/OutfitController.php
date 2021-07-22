@@ -119,8 +119,23 @@ class OutfitController extends Controller
             $request->flash();
             return redirect()->back()->withErrors($validator);
         }
-        
+
         $outfit = new Outfit;
+
+        if ($request->has('outfit_photo')) {
+            $photo = $request->file('outfit_photo');
+            $imageName = 
+            $request->outfit_type. '-' .
+            $request->outfit_color. '-' .
+            time(). '.' .
+            $photo->getClientOriginalExtension();
+            $path = public_path() . '/outfits-images/'; // serverio vidinis kelias
+            $url = asset('outfits-images/'.$imageName); // url narsyklei (isorinis)
+            $photo->move($path, $imageName); // is serverio tmp ===> i public folderi
+            $outfit->photo = $url;
+        }
+       
+        
         $outfit->type = $request->outfit_type;
         $outfit->color = $request->outfit_color;
         $outfit->size = $request->outfit_size;
@@ -162,6 +177,43 @@ class OutfitController extends Controller
      */
     public function update(Request $request, Outfit $outfit)
     {
+
+        if ($request->has('delete_outfit_photo')) {
+            if ($outfit->photo) {
+                $imageName = explode('/', $outfit->photo);
+                $imageName = array_pop($imageName);
+                $path = public_path() . '/outfits-images/'.$imageName;
+                if (file_exists($path)) {
+                    unlink($path);
+                }
+            }
+            $outfit->photo = null;
+        }
+
+        if ($request->has('outfit_photo')) {
+
+            if ($outfit->photo) {
+                $imageName = explode('/', $outfit->photo);
+                $imageName = array_pop($imageName);
+                $path = public_path() . '/outfits-images/'.$imageName;
+                if (file_exists($path)) {
+                    unlink($path);
+                }
+                
+            }
+
+            $photo = $request->file('outfit_photo');
+            $imageName = 
+            $request->outfit_type. '-' .
+            $request->outfit_color. '-' .
+            time(). '.' .
+            $photo->getClientOriginalExtension();
+            $path = public_path() . '/outfits-images/'; // serverio vidinis kelias
+            $url = asset('outfits-images/'.$imageName); // url narsyklei (isorinis)
+            $photo->move($path, $imageName); // is serverio tmp ===> i public folderi
+            $outfit->photo = $url;
+        }
+        
         $outfit->type = $request->outfit_type;
         $outfit->color = $request->outfit_color;
         $outfit->size = $request->outfit_size;
@@ -179,6 +231,14 @@ class OutfitController extends Controller
      */
     public function destroy(Outfit $outfit)
     {
+        if ($outfit->photo) {
+            $imageName = explode('/', $outfit->photo);
+            $imageName = array_pop($imageName);
+            $path = public_path() . '/outfits-images/'.$imageName;
+            if (file_exists($path)) {
+                unlink($path);
+            }
+        }
         $outfit->delete();
         return redirect()->route('outfit.index')->with('success_message', 'Outfit was deleted.');
     }
